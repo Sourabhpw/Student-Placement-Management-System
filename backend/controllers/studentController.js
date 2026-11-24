@@ -1,5 +1,6 @@
 const Student = require('../models/Student');
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 // @desc    Get all students (with search, filter, pagination)
 // @route   GET /api/students

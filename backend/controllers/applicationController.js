@@ -194,6 +194,17 @@ exports.updateApplicationStatus = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Application not found' });
     }
 
+    // Ensure recruiter can only manage applications belonging to their own company
+    if (req.user.role === 'recruiter') {
+      const company = await Company.findOne({ recruiter: req.user._id });
+      if (!company || application.company.toString() !== company._id.toString()) {
+        return res.status(403).json({
+          success: false,
+          message: 'Access denied: You can only update applications submitted to your own company.',
+        });
+      }
+    }
+
     application.status = status;
     if (notes) application.recruiterNotes = notes;
 

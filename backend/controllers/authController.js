@@ -6,9 +6,12 @@ const jwt = require('jsonwebtoken');
 
 // Generate JWT token helper
 const generateToken = (id) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is missing.');
+  }
   return jwt.sign(
     { id },
-    process.env.JWT_SECRET || 'placement_super_secret_jwt_key_2026_dev_prod',
+    process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRE || '7d',
     }
@@ -28,12 +31,20 @@ exports.register = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'User already exists with this email' });
     }
 
+    // Prevent public registration as admin
+    if (role === 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admin registration is restricted. Admin accounts can only be created by system administrators.',
+      });
+    }
+
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
-    const userRole = role && ['admin', 'student', 'recruiter'].includes(role) ? role : 'student';
+    // Create user (only student or recruiter allowed via public registration)
+    const userRole = role === 'recruiter' ? 'recruiter' : 'student';
     const user = await User.create({
       name,
       email,

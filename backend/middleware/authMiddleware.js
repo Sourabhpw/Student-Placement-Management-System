@@ -20,10 +20,10 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || 'placement_super_secret_jwt_key_2026_dev_prod'
-    );
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET environment variable is missing.');
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id).select('-password');
     if (!req.user) {
       return res.status(401).json({
