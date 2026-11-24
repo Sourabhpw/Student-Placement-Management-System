@@ -3,7 +3,7 @@ services:
     name: student-placement-backend
     env: node
     buildCommand: npm install
-    startCommand: node server.js
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -14,4 +14,6 @@ services:
       - key: JWT_EXPIRE
         value: 7d
       - key: MONGODB_URI
+        sync: false
+      - key: CLIENT_URL
         sync: false

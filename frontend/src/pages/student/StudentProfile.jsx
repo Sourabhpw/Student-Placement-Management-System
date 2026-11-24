@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar';
-import api from '../../services/api';
+import api, { SERVER_BASE_URL } from '../../services/api';
 
 const StudentProfile = () => {
   const [student, setStudent] = useState(null);
@@ -329,7 +329,7 @@ const StudentProfile = () => {
                     </div>
                   </div>
                   <a
-                    href={`http://localhost:5000${student.resumeUrl}`}
+                    href={`${SERVER_BASE_URL}${student.resumeUrl}`}
                     target="_blank"
                     rel="noreferrer"
                     className="btn btn-outline-primary btn-sm w-100 mt-3"

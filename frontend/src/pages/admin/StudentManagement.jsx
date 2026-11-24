@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar';
-import api from '../../services/api';
+import api, { SERVER_BASE_URL } from '../../services/api';
 
 const StudentManagement = () => {
   const [students, setStudents] = useState([]);
@@ -186,7 +186,7 @@ const StudentManagement = () => {
                       <td>
                         {st.resumeUrl ? (
                           <a
-                            href={`http://localhost:5000${st.resumeUrl}`}
+                            href={`${SERVER_BASE_URL}${st.resumeUrl}`}
                             target="_blank"
                             rel="noreferrer"
                             className="btn btn-sm btn-light border text-danger"

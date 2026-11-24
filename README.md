@@ -380,33 +380,47 @@ npm run build
 
 ---
 
-## ☁️ Deployment Guide (Vercel & Render)
+## ☁️ Deployment Guide (MongoDB Atlas, Render & Vercel)
 
-### Backend Deployment (Render)
-1. Push this repository to GitHub.
-2. In the [Render Dashboard](https://dashboard.render.com/), click **New + Web Service**.
-3. Connect your repository.
-4. Render will automatically detect [render.yaml](file:///d:/Student%20Placement%20Management/backend/render.yaml) or you can configure manually:
+### Step 1: Create MongoDB Atlas Database
+1. Sign up / Log in to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+2. Create a new free **M0 Shared Cluster**.
+3. Under **Security > Database Access**:
+   - Create a database user with read/write privileges (e.g. username: `placement_user`, and a strong password).
+4. Under **Security > Network Access**:
+   - Add IP Address: `0.0.0.0/0` (Allow access from anywhere, required for Render).
+5. Click **Connect > Drivers (Node.js)**:
+   - Copy your connection string (format: `mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/placement_portal?retryWrites=true&w=majority`).
+
+### Step 2: Deploy Backend Web Service to Render
+1. Log in to [Render](https://render.com/).
+2. Click **New + > Web Service** and select your GitHub repository (`Student-Placement-Management-System`).
+3. Set service settings:
+   - **Name**: `student-placement-backend`
    - **Root Directory**: `backend`
+   - **Runtime**: `Node`
    - **Build Command**: `npm install`
-   - **Start Command**: `node server.js`
-5. Configure Environment Variables:
+   - **Start Command**: `npm start`
+4. Add Environment Variables:
    - `NODE_ENV`: `production`
    - `PORT`: `5000`
-   - `JWT_SECRET`: `<generate-a-secure-random-string>`
+   - `JWT_SECRET`: `<generate-a-strong-random-key>`
    - `JWT_EXPIRE`: `7d`
-   - `MONGODB_URI`: `<your-mongodb-atlas-uri>`
-6. Deploy and copy your backend URL (e.g. `https://your-backend.onrender.com`).
+   - `MONGODB_URI`: `<your-mongodb-atlas-connection-string>`
+   - `CLIENT_URL`: `https://your-frontend.vercel.app` (Add after deploying frontend, or use temporary placeholder)
+5. Click **Create Web Service**. Once deployed, copy your Render URL:
+   `https://student-placement-backend.onrender.com`
 
-### Frontend Deployment (Vercel)
-1. In the [Vercel Dashboard](https://vercel.com/), click **Add New Project**.
-2. Import your GitHub repository.
+### Step 3: Deploy Frontend to Vercel
+1. Log in to [Vercel](https://vercel.com/).
+2. Click **Add New > Project** and import `Student-Placement-Management-System`.
 3. Configure project settings:
    - **Framework Preset**: `Vite`
    - **Root Directory**: `frontend`
-4. Set Environment Variable:
-   - `VITE_API_URL`: `https://your-backend.onrender.com/api`
-5. Click **Deploy**. Vercel uses [vercel.json](file:///d:/Student%20Placement%20Management/frontend/vercel.json) to handle single-page app (SPA) client-side routing.
+4. Under **Environment Variables**, add:
+   - `VITE_API_URL`: `https://student-placement-backend.onrender.com/api`
+5. Click **Deploy**. Vercel will build the React application and deploy it with SPA client-side routing.
+6. Once deployed, copy your Vercel URL (e.g. `https://your-project.vercel.app`) and update the `CLIENT_URL` variable in Render.
 
 ---
 

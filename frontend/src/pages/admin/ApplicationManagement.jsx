@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar';
-import api from '../../services/api';
+import api, { SERVER_BASE_URL } from '../../services/api';
 
 const ApplicationManagement = () => {
   const [applications, setApplications] = useState([]);
@@ -97,7 +97,7 @@ const ApplicationManagement = () => {
                       <td>
                         {app.resumeUrl || app.student?.resumeUrl ? (
                           <a
-                            href={`http://localhost:5000${app.resumeUrl || app.student?.resumeUrl}`}
+                            href={`${SERVER_BASE_URL}${app.resumeUrl || app.student?.resumeUrl}`}
                             target="_blank"
                             rel="noreferrer"
                             className="btn btn-sm btn-outline-danger"
