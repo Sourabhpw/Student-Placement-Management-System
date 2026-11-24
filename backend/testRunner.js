@@ -2,6 +2,9 @@ const http = require('http');
 const path = require('path');
 const fs = require('fs');
 
+// Self-Contained Test Suite Runner
+const app = require('./server');
+
 const runTest = (name, fn) => {
   return fn()
     .then(() => {
@@ -475,4 +478,7 @@ async function testSuite() {
   process.exit(0);
 }
 
-testSuite();
+// Give server and MongoDB connection 1.5s to establish before test execution
+setTimeout(() => {
+  testSuite();
+}, 1500);

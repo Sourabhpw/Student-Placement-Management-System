@@ -5,8 +5,8 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorMiddleware');
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from backend/.env explicitly
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 // Connect to Database
 connectDB();
